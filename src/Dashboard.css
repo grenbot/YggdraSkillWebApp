@@ -1,0 +1,83 @@
+.dashboard-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.dashboard-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.dashboard-container h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.dashboard-container h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #666;
+}
+
+.suggested-nodes-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.suggested-node-item {
+  display: flex;
+  justify-content: center;
+}
+
+.suggested-node {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  color: #222;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  max-width: 500px;
+}
+
+.suggested-node:hover {
+  background-color: #e0e0e0;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.node-label {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.node-level {
+  font-size: 1rem;
+  color: #555;
+}
+
+.climb-tree-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease;
+}
+
+.climb-tree-button:hover {
+  background-color: #0056b3;
+}

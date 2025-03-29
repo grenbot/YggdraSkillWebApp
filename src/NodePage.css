@@ -1,0 +1,55 @@
+.node-page {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.node-page h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.node-page p {
+  margin-bottom: 1rem;
+}
+
+.subskills ul {
+  list-style: none;
+  padding: 0;
+}
+
+.subskills li {
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #87ceeb;
+  transition: width 0.3s;
+}
+
+button {
+  padding: 10px 20px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+button.master-skill {
+  background-color: #28a745;
+}
+
+button.back-to-tree {
+  background-color: #007bff;
+}

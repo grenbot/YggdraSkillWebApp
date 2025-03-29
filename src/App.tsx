@@ -1,0 +1,33 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Dashboard from './Dashboard';
+import SkillTree from './SkillTree';
+import NodePage from './NodePage';
+import Banner from './Banner';
+import Login from './Login';
+import Signup from './Signup';
+import Develop from './Develop';
+import PartitionPage from './PartitionPage';
+import HomePage from './HomePage';
+import ErrorBoundary from './ErrorBoundary';
+
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Banner />
+      <ErrorBoundary>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/tree/:treeId" element={<SkillTree />} />
+          <Route path="/node/:treeId/:nodeId" element={<NodePage />} />
+          <Route path="/develop" element={<Develop />} />
+          <Route path="/develop/:partition" element={<PartitionPage />} />
+        </Routes>
+      </ErrorBoundary>
+    </BrowserRouter>
+  );
+};
+
+export default App;

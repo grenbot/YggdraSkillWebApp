@@ -1,0 +1,53 @@
+.custom-node {
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  color: black; /* Update font color to black */
+}
+
+.node-prek {
+  background-color: #ffcccc;
+  border: 1px solid #ff0000;
+}
+
+.node-elementary {
+  background-color: #ffd700;
+  border: 1px solid #daa520;
+}
+
+.node-middle-school {
+  background-color: #98fb98;
+  border: 1px solid #32cd32;
+}
+
+.node-high-school {
+  background-color: #add8e6;
+  border: 1px solid #0000ff;
+}
+
+.node-lower-undergrad {
+  background-color: #dda0dd;
+  border: 1px solid #9932cc;
+}
+
+.node-upper-undergrad {
+  background-color: #ffc0cb;
+  border: 1px solid #ff69b4;
+}
+
+.node-masters {
+  background-color: #f0e68c;
+  border: 1px solid #bdb76b;
+}
+
+.node-phd {
+  background-color: #e6e6fa;
+  border: 1px solid #8a2be2;
+}
+
+.node-unknown {
+  background-color: #6cd7e5;
+  border: 1px solid #186b23;
+}

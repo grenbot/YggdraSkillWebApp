@@ -1,0 +1,10 @@
+.login-card {
+    max-width: 400px; /* Constrain the card's width */
+    margin: 0 auto; /* Center it */
+    padding: 20px;
+    background: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    text-align: center;
+  }
+  

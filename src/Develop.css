@@ -1,0 +1,53 @@
+.develop-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    background-color: #2d4e7e;
+    padding: 20px;
+  }
+  
+  .develop-page h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .develop-page p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+  
+  .develop-buttons {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .develop-button {
+    padding: 20px 40px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+  }
+  
+  .develop-button.mind {
+    background-color: #007bff;
+  }
+  
+  .develop-button.body {
+    background-color: #28a745;
+  }
+  
+  .develop-button.spirit {
+    background-color: #ffc107;
+  }
+  
+  .develop-button:hover {
+    transform: scale(1.05);
+  }
+  
