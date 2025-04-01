@@ -5,5 +5,5 @@ import App from '../src/App';
 
 test('renders App component with expected text', () => {
   render(<App />);
-  expect(screen.getByText(/Welcome to YggdraSkill/i)).toBeInTheDocument();
+  expect(screen.getByText(/Welcome to Skill Trees/i)).toBeInTheDocument();
 });

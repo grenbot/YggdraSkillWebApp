@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore/lite'; // Use Firestore Lite for Node.js
+import { getFirestore } from 'firebase/firestore/lite';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 
 const firebaseConfig = {

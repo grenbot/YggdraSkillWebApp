@@ -1,13 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore/lite';
 import { db } from './firebaseConfig';
 import './PartitionPage.css';
 
+interface TreeData {
+  key: string;
+  title: string;
+  description?: string;
+  tags?: string[];
+  [key: string]: any;
+}
+
 const PartitionPage = () => {
   const { partition } = useParams();
   const navigate = useNavigate();
-  const [trees, setTrees] = useState([]);
+  const [trees, setTrees] = useState<TreeData[]>([]);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -18,12 +26,16 @@ const PartitionPage = () => {
         const querySnapshot = await getDocs(collection(db, 'trees'));
         console.log('[PartitionPage] Total trees fetched:', querySnapshot.size);
 
-        const filteredTrees = [];
+        const filteredTrees: TreeData[] = [];
 
         querySnapshot.forEach((doc) => {
           const treeData = doc.data();
           if (treeData.partition === partition) {
-            filteredTrees.push({ key: doc.id, ...treeData });
+            filteredTrees.push({
+              key: doc.id,
+              title: treeData.title || doc.id,
+              ...treeData,
+            });            
           }
         });
 
@@ -62,7 +74,7 @@ const PartitionPage = () => {
             onClick={() => navigate(`/tree/${tree.key}`)}
             className="tree-button"
           >
-            {tree.key.charAt(0).toUpperCase() + tree.key.slice(1)} Tree
+            {tree.title || tree.key.charAt(0).toUpperCase() + tree.key.slice(1)} Tree
           </button>
         ))}
       </div>

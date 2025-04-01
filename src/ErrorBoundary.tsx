@@ -1,46 +1,44 @@
-import React, { Component } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
 
-class ErrorBoundary extends Component {
-  constructor(props) {
+interface ErrorBoundaryProps {
+  children: ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  errorMessage: string;
+}
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false, errorMessage: '', errorInfo: null };
+    this.state = {
+      hasError: false,
+      errorMessage: '',
+    };
   }
 
-  static getDerivedStateFromError(error) {
-    return { hasError: true, errorMessage: error.message };
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return {
+      hasError: true,
+      errorMessage: error.message,
+    };
   }
 
-  componentDidCatch(error, errorInfo) {
-    console.error('Error caught by ErrorBoundary:', error, errorInfo);
-    this.setState({ errorInfo });
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    console.error('Error caught in ErrorBoundary:', error, errorInfo);
   }
 
-  handleRetry = () => {
-    this.setState({ hasError: false, errorMessage: '', errorInfo: null });
-  };
-
-  render() {
+  render(): ReactNode {
     if (this.state.hasError) {
       return (
-        <div style={{ padding: '20px', textAlign: 'center' }}>
-          <h2>Oops! Something went wrong.</h2>
-          <p>{this.state.errorMessage || 'An unexpected error occurred.'}</p>
-          <button
-            onClick={this.handleRetry}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: '#007bff',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-            }}
-          >
-            Retry
-          </button>
+        <div style={{ padding: '2rem', color: 'red' }}>
+          <h1>Something went wrong.</h1>
+          <p>{this.state.errorMessage}</p>
         </div>
       );
     }
+
     return this.props.children;
   }
 }

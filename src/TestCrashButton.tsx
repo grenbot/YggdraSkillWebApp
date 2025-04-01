@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const TestCrashButton = () => {
   const [shouldCrash, setShouldCrash] = useState(false);

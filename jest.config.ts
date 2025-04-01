@@ -1,20 +1,18 @@
 import type { Config } from 'jest';
 
 const config: Config = {
-  preset: 'ts-jest/presets/default-esm', // <- use ESM preset
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   transform: {
-    '^.+\\.(ts|tsx)$': [
-      'ts-jest',
-      { useESM: true, tsconfig: '<rootDir>/tsconfig.jest.json' },
-    ],
+    '^.+\\.(ts|tsx|js|jsx)$': 'babel-jest',  // Use Babel for transforming all TS/JS files
   },
   moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.jsx?$': '$1',
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
-  extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(firebase|@firebase)/)',
+  ],
 };
 
 export default config;

@@ -1,63 +1,64 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import {
+  createContext,
+  useContext,
+  useReducer,
+  ReactNode,
+  Dispatch,
+} from 'react';
 
-// Define action types
-const TOGGLE_SUBSKILL = 'TOGGLE_SUBSKILL';
-const INIT_SUBSKILLS = 'INIT_SUBSKILLS';
+// Types for subskills structure
+export interface Subskill {
+  id: string;
+  title: string;
+  completed: boolean;
+}
 
-// Define the reducer for subskill management
-const subskillReducer = (state, action) => {
+export type SubskillState = Record<string, Subskill[]>;
+
+export type SubskillAction =
+  | { type: 'SET_SUBSKILLS'; nodeId: string; subskills: Subskill[] }
+  | { type: 'ADD_SUBSKILL'; nodeId: string; subskill: Subskill };
+
+// Reducer function
+function subskillReducer(
+  state: SubskillState,
+  action: SubskillAction
+): SubskillState {
   switch (action.type) {
-    case INIT_SUBSKILLS:
+    case 'SET_SUBSKILLS':
+      return { ...state, [action.nodeId]: action.subskills };
+    case 'ADD_SUBSKILL':
       return {
         ...state,
-        [action.payload.nodeId]: action.payload.subskills,
+        [action.nodeId]: [...(state[action.nodeId] || []), action.subskill],
       };
-
-    case TOGGLE_SUBSKILL: {
-      const { nodeId, subskill } = action.payload;
-      const currentNodeSubskills = state[nodeId] || [];
-      const updatedSubskills = currentNodeSubskills.includes(subskill)
-        ? currentNodeSubskills.filter((s) => s !== subskill)
-        : [...currentNodeSubskills, subskill];
-
-      return {
-        ...state,
-        [nodeId]: updatedSubskills,
-      };
-    }
-
     default:
       return state;
   }
+}
+
+// Context type
+interface SubskillContextType {
+  state: SubskillState;
+  dispatch: Dispatch<SubskillAction>;
+}
+
+// Default context value
+const defaultValue: SubskillContextType = {
+  state: {},
+  dispatch: () => {},
 };
 
-// Create context
-const SubskillContext = createContext();
+const SubskillContext = createContext<SubskillContextType>(defaultValue);
 
-// Create provider
-export const SubskillProvider = ({ children }) => {
+export const SubskillProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(subskillReducer, {});
 
-  const initializeSubskills = (nodeId, subskills) => {
-    dispatch({ type: INIT_SUBSKILLS, payload: { nodeId, subskills } });
-  };
-
-  const toggleSubskill = (nodeId, subskill) => {
-    dispatch({ type: TOGGLE_SUBSKILL, payload: { nodeId, subskill } });
-  };
-
   return (
-    <SubskillContext.Provider value={{ state, initializeSubskills, toggleSubskill }}>
+    <SubskillContext.Provider value={{ state, dispatch }}>
       {children}
     </SubskillContext.Provider>
   );
 };
 
-// Custom hook to use the SubskillContext
-export const useSubskills = () => {
-  const context = useContext(SubskillContext);
-  if (!context) {
-    throw new Error('useSubskills must be used within a SubskillProvider');
-  }
-  return context;
-};
+export const useSubskills = () => useContext(SubskillContext);
