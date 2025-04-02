@@ -13,8 +13,12 @@ const Signup = () => {
       await createUserWithEmailAndPassword(auth, email, password);
       alert('Account created successfully!');
     } catch (err) {
-      setError(getAuthErrorMessage(err));
-    }
+      if (typeof err === 'object' && err !== null && 'code' in err) {
+        setError(getAuthErrorMessage(err as { code: string }));
+      } else {
+        setError('An unexpected error occurred.');
+      }
+    }    
   };
 
   return (

@@ -12,7 +12,12 @@ interface AuthProgressContextValue {
   dispatch: React.Dispatch<{ type: string; payload?: any }>;
 }
 
-export const AuthProgressContext = createContext<AuthProgressContextValue | null>(null);
+export const AuthProgressContext = createContext<AuthProgressContextValue>({
+  authChecked: false,
+  user: null,
+  metadata: null,
+  dispatch: () => {}, // no-op to satisfy typing
+});
 
 interface State {
   authChecked: boolean;

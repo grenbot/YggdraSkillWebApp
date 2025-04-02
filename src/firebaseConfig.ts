@@ -1,7 +1,9 @@
+// src/firebaseConfig.ts
+
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore/lite';
-import { getAnalytics, isSupported } from 'firebase/analytics';
+import { getAnalytics, isSupported, Analytics } from 'firebase/analytics';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAiCMzek2ME2e_PC6RlgpBy-_Wq-_iny-0',
@@ -13,15 +15,15 @@ const firebaseConfig = {
   measurementId: 'G-RBQH9ZXYKF',
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app); // Firestore Lite for Node.js
-export const auth = getAuth(app);
-export let analytics;
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let analytics: Analytics | undefined;
 isSupported().then((supported) => {
   if (supported) {
     analytics = getAnalytics(app);
-  } else {
-    console.log('Analytics not supported in this environment');
   }
 });
+
+export { app, auth, db, analytics };

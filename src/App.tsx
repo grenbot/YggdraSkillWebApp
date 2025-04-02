@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+import { AuthProgressContext } from './AuthProgressContext';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import SkillTree from './SkillTree';
@@ -11,9 +13,14 @@ import HomePage from './HomePage';
 import ErrorBoundary from './ErrorBoundary';
 
 const App = () => {
+  const context = useContext(AuthProgressContext);
+  if (!context) return null; // safety fallback
+
+  const { user, dispatch } = context;
+
   return (
     <BrowserRouter>
-      <Banner />
+      <Banner user={user} setUser={(u) => dispatch({ type: 'SET_USER', payload: u })} />
       <ErrorBoundary>
         <Routes>
           <Route path="/" element={<HomePage />} />

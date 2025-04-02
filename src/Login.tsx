@@ -15,8 +15,12 @@ const Login = () => {
       await signInWithEmailAndPassword(auth, email, password);
       navigate('/dashboard');
     } catch (err) {
-      setError(getAuthErrorMessage(err));
-    }
+      if (typeof err === 'object' && err !== null && 'code' in err) {
+        setError(getAuthErrorMessage(err as { code: string }));
+      } else {
+        setError('An unexpected error occurred.');
+      }
+    }    
   };
 
   return (
