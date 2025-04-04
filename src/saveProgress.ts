@@ -1,9 +1,14 @@
-// saveProgress.ts (Final Clean Version)
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db, auth } from './firebaseConfig';
 import { getFirestoreErrorMessage } from './FirestoreErrorHandler';
 
-export const saveProgress = async ({ treeId, nodeId, completedSubskills }) => {
+interface SaveProgressArgs {
+  treeId: string;
+  nodeId: string;
+  completedSubskills: string[];
+}
+
+export const saveProgress = async ({ treeId, nodeId, completedSubskills }: SaveProgressArgs) => {
   const user = auth.currentUser;
   if (!user) {
     console.error('User not logged in!');
@@ -44,8 +49,13 @@ export const saveProgress = async ({ treeId, nodeId, completedSubskills }) => {
     console.log('[saveProgress] Progress successfully saved.');
     return updatedProgress;
   } catch (error) {
-    const message = getFirestoreErrorMessage(error);
-    console.error('Firestore error:', message);
-    throw new Error(message);
+    if (typeof error === 'object' && error !== null && 'code' in error) {
+      const message = getFirestoreErrorMessage(error as { code: string });
+      console.error('Firestore error:', message);
+      throw new Error(message);
+    } else {
+      console.error('Unknown error while saving progress');
+      throw new Error('An unexpected error occurred while saving progress.');
+    }
   }
 };

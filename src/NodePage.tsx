@@ -21,27 +21,25 @@ interface NodeData {
   };
 }
 
-interface ProgressState {
-  [treeId: string]: {
-    [nodeId: string]: string[];
-  };
-}
-
 interface SubskillsState {
   [nodeId: string]: string[];
 }
 
+// ✅ Pull from state.subskills directly
 const selectSubskillsState = (state: RootState) => state.subskills as SubskillsState;
-const selectProgressState = (state: RootState) => state.progress as ProgressState;
+
+// ✅ NEW: point to progress.trees, which holds ForestProgress structure
+const selectProgressState = (state: RootState) => state.progress.trees;
 
 const selectSubskills = createSelector(
   [selectSubskillsState, (_: RootState, nodeId: string) => nodeId],
   (subskillsState, nodeId) => subskillsState[nodeId] || []
 );
 
+// ✅ Returns array of subskills (not NodeProgress)
 const selectProgress = createSelector(
   [selectProgressState, (_: RootState, treeId: string) => treeId, (_: RootState, __: string, nodeId: string) => nodeId],
-  (progressState, treeId, nodeId) => progressState[treeId]?.[nodeId] || []
+  (progressTrees, treeId, nodeId) => progressTrees[treeId]?.[nodeId]?.subskills || []
 );
 
 const NodePage = () => {

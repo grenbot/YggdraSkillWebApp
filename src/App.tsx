@@ -16,11 +16,9 @@ const App = () => {
   const context = useContext(AuthProgressContext);
   if (!context) return null; // safety fallback
 
-  const { user, dispatch } = context;
-
   return (
     <BrowserRouter>
-      <Banner user={user} setUser={(u) => dispatch({ type: 'SET_USER', payload: u })} />
+      <Banner />
       <ErrorBoundary>
         <Routes>
           <Route path="/" element={<HomePage />} />

@@ -1,11 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ForestProgress, NodeProgress } from '../../types/sharedTypes';
 
+// ✅ Type-safe state with internal `trees` object and `error`
 export interface ProgressState {
+  trees: ForestProgress;
   error?: string | null;
-  [treeId: string]: { [nodeId: string]: string[] } | string | null | undefined;
 }
 
+// ✅ Properly typed initial state
 const initialState: ProgressState = {
+  trees: {},
   error: null,
 };
 
@@ -23,11 +27,14 @@ const progressSlice = createSlice({
     ) => {
       const { treeId, nodeId, subskills } = action.payload;
 
-      if (typeof state[treeId] !== 'object' || state[treeId] === null) {
-        state[treeId] = {};
+      if (!state.trees[treeId]) {
+        state.trees[treeId] = {};
       }
 
-      (state[treeId] as { [nodeId: string]: string[] })[nodeId] = subskills;
+      state.trees[treeId]![nodeId] = {
+        subskills,
+        completedAt: new Date().toISOString(),
+      } as NodeProgress;
     },
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;

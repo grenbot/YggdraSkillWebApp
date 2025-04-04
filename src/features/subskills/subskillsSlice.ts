@@ -75,7 +75,18 @@ export const fetchSubskills =
       );
       dispatch(clearError());
     } catch (error) {
-      const errorMessage = getFirestoreErrorMessage(error);
+      let errorMessage = 'An unknown error occurred.';
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'code' in error &&
+        typeof error.code === 'string'
+      ) {
+        errorMessage = getFirestoreErrorMessage({ code: error.code });
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
       console.error('Firestore error:', errorMessage);
       dispatch(setError(errorMessage));
     }

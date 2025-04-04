@@ -3,7 +3,9 @@ import { onAuthStateChanged, getIdTokenResult } from 'firebase/auth';
 import { auth } from './firebaseConfig';
 import { useDispatch } from 'react-redux';
 import { updateAuthChecked, updateUser, updateMetadata } from './features/auth/authSlice';
-import { AppUser, SkillTree, SkillNode, Subskill, TreeProgress, NodeProgress } from './types/sharedTypes';
+import { AppUser, TreeProgress } from './types/sharedTypes';
+import { loadProgress } from './loadProgress';
+import { saveProgress } from './features/progress/progressSlice';
 
 interface AuthProgressContextValue {
   authChecked: boolean;
@@ -70,6 +72,25 @@ export const AuthProgressProvider: React.FC<AuthProgressProviderProps> = ({ chil
         reduxDispatch(updateUser(appUser));
         reduxDispatch(updateMetadata(tokenResult.claims));
         reduxDispatch(updateAuthChecked(true));
+
+        // Load progress and dispatch to Redux
+        try {
+          const treeIds = ['math']; // TODO: dynamically fetch user’s enrolled tree IDs
+          for (const treeId of treeIds) {
+            const treeProgress: TreeProgress = await loadProgress(user.uid, treeId);
+            Object.entries(treeProgress).forEach(([nodeId, nodeProgress]) => {
+              reduxDispatch(
+                saveProgress({
+                  treeId,
+                  nodeId,
+                  subskills: nodeProgress.subskills,
+                })
+              );
+            });
+          }
+        } catch (error) {
+          console.error('Error loading progress:', error);
+        }
       } else {
         localDispatch({ type: 'SET_USER', payload: null });
         localDispatch({ type: 'SET_METADATA', payload: null });
