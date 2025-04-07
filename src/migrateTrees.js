@@ -1,6 +1,6 @@
-import { db } from './firebaseConfig.js'; // Use firestore/lite for consistency
+import { db } from './firebaseConfig.js'; // Use firestore for consistency
 import trees from './trees.json' assert { type: 'json' };
-import { collection, doc, setDoc } from 'firebase/firestore/lite';
+import { collection, doc, setDoc } from 'firebase/firestore';
 
 const migrateTreesToFirestore = async () => {
   try {

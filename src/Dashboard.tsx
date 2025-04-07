@@ -28,6 +28,10 @@ const Dashboard = () => {
       ? (completedSubskills.length / totalSubskills) * 100
       : 0;
 
+  console.log("🔍 Dashboard metadata:", metadata);
+  console.log("🌲 Dashboard progress keys:", Object.keys(trees));
+  console.log("🧩 Dashboard node:", node);      
+
     return (
       <div key={node.id} className="node">
         <h4>{node.label}</h4>

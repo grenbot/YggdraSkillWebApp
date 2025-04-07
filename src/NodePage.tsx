@@ -7,7 +7,7 @@ import {
   toggleSubskill,
 } from './features/subskills/subskillsSlice';
 import { saveProgress } from './features/progress/progressSlice';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore/lite';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import type { RootState, AppDispatch } from './store';
 import './NodePage.css';

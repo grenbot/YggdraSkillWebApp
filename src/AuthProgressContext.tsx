@@ -3,14 +3,15 @@ import { onAuthStateChanged, getIdTokenResult } from 'firebase/auth';
 import { auth } from './firebaseConfig';
 import { useDispatch } from 'react-redux';
 import { updateAuthChecked, updateUser, updateMetadata } from './features/auth/authSlice';
-import { AppUser, TreeProgress } from './types/sharedTypes';
+import { AppUser, TreeProgress, SkillTree } from './types/sharedTypes';
 import { loadProgress } from './loadProgress';
 import { saveProgress } from './features/progress/progressSlice';
+import { loadTreeMetadata } from './utils/loadTreeMetadata';
 
 interface AuthProgressContextValue {
   authChecked: boolean;
   user: AppUser | null;
-  metadata: any;
+  metadata: Record<string, SkillTree> | null;
   dispatch: React.Dispatch<{ type: string; payload?: any }>;
 }
 
@@ -18,13 +19,13 @@ export const AuthProgressContext = createContext<AuthProgressContextValue>({
   authChecked: false,
   user: null,
   metadata: null,
-  dispatch: () => {}, // no-op to satisfy typing
+  dispatch: () => {},
 });
 
 interface State {
   authChecked: boolean;
   user: AppUser | null;
-  metadata: any;
+  metadata: Record<string, SkillTree> | null;
 }
 
 const initialState: State = {
@@ -40,7 +41,13 @@ function reducer(state: State, action: { type: string; payload?: any }): State {
     case 'SET_USER':
       return { ...state, user: action.payload };
     case 'SET_METADATA':
-      return { ...state, metadata: action.payload };
+      return {
+        ...state,
+        metadata: {
+          ...state.metadata,
+          ...action.payload,
+        },
+      };
     default:
       return state;
   }
@@ -66,17 +73,17 @@ export const AuthProgressProvider: React.FC<AuthProgressProviderProps> = ({ chil
         };
 
         localDispatch({ type: 'SET_USER', payload: appUser });
-        localDispatch({ type: 'SET_METADATA', payload: tokenResult.claims });
-        localDispatch({ type: 'SET_AUTH_CHECKED', payload: true });
-
         reduxDispatch(updateUser(appUser));
         reduxDispatch(updateMetadata(tokenResult.claims));
+        localDispatch({ type: 'SET_AUTH_CHECKED', payload: true });
         reduxDispatch(updateAuthChecked(true));
 
-        // Load progress and dispatch to Redux
+        // Load progress + metadata for known tree IDs
         try {
-          const treeIds = ['math']; // TODO: dynamically fetch user’s enrolled tree IDs
+          const treeIds = ['math']; // TODO: dynamically detect user’s enrolled trees
+
           for (const treeId of treeIds) {
+            // Load progress
             const treeProgress: TreeProgress = await loadProgress(user.uid, treeId);
             Object.entries(treeProgress).forEach(([nodeId, nodeProgress]) => {
               reduxDispatch(
@@ -87,9 +94,16 @@ export const AuthProgressProvider: React.FC<AuthProgressProviderProps> = ({ chil
                 })
               );
             });
+
+            // Load metadata
+            const treeMetadata = await loadTreeMetadata(treeId);
+            localDispatch({
+              type: 'SET_METADATA',
+              payload: { [treeId]: treeMetadata },
+            });
           }
         } catch (error) {
-          console.error('Error loading progress:', error);
+          console.error('Error loading progress or metadata:', error);
         }
       } else {
         localDispatch({ type: 'SET_USER', payload: null });
@@ -111,3 +125,26 @@ export const AuthProgressProvider: React.FC<AuthProgressProviderProps> = ({ chil
     </AuthProgressContext.Provider>
   );
 };
+
+export default AuthProgressProvider;
+
+/**
+ * NOTES:
+ *
+ * - This provider handles Firebase Authentication + Firestore integration for progress and tree metadata.
+ * - Wrap your app in <AuthProgressProvider> to ensure user state and progress are globally accessible.
+ *
+ * Dependencies:
+ * - Redux store with: updateUser, updateMetadata, updateAuthChecked, saveProgress
+ * - Firestore utils: loadProgress(treeId), loadTreeMetadata(treeId)
+ * - Firebase auth instance (from firebaseConfig.ts)
+ * - App types: SkillTree, AppUser (from sharedTypes.ts)
+ *
+ * Consumption:
+ * - Use `useContext(AuthProgressContext)` in components to access:
+ *   { authChecked, user, metadata, dispatch }
+ *
+ * Scaling Notes:
+ * - Dynamically expand `treeIds[]` to support full forest loading
+ * - Consider background loading of new trees as user engages them
+ */

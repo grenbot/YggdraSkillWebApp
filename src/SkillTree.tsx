@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useParams } from 'react-router-dom';
-import { doc, getDoc, collection, getDocs } from 'firebase/firestore/lite';
+import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 
 const levelColors: Record<string, string> = {

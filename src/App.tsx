@@ -1,37 +1,46 @@
-import { useContext } from 'react';
-import { AuthProgressContext } from './AuthProgressContext';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+// PATCHED App.tsx
+import { Routes, Route } from 'react-router-dom';
+import { AuthProgressProvider } from './AuthProgressContext';
+import HomePage from './HomePage';
 import Dashboard from './Dashboard';
-import SkillTree from './SkillTree';
 import NodePage from './NodePage';
-import Banner from './Banner';
+import PartitionPage from './PartitionPage';
+import Develop from './Develop';
 import Login from './Login';
 import Signup from './Signup';
-import Develop from './Develop';
-import PartitionPage from './PartitionPage';
-import HomePage from './HomePage';
+import Banner from './Banner';
 import ErrorBoundary from './ErrorBoundary';
+import { BrowserRouter } from 'react-router-dom';
+import React from 'react';
 
-const App = () => {
-  const context = useContext(AuthProgressContext);
-  if (!context) return null; // safety fallback
+interface AppProps {
+  router?: JSX.Element; // Allows MemoryRouter to be passed in tests
+}
+
+const App: React.FC<AppProps> = ({ router }) => {
+  const Router = router ?? <BrowserRouter />;
 
   return (
-    <BrowserRouter>
-      <Banner />
-      <ErrorBoundary>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/tree/:treeId" element={<SkillTree />} />
-          <Route path="/node/:treeId/:nodeId" element={<NodePage />} />
-          <Route path="/develop" element={<Develop />} />
-          <Route path="/develop/:partition" element={<PartitionPage />} />
-        </Routes>
-      </ErrorBoundary>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <AuthProgressProvider>
+        {React.cloneElement(Router, {
+          children: (
+            <>
+              <Banner />
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/develop" element={<Develop />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/partition/:partitionKey" element={<PartitionPage />} />
+                <Route path="/node/:treeId/:nodeId" element={<NodePage />} />
+              </Routes>
+            </>
+          ),
+        })}
+      </AuthProgressProvider>
+    </ErrorBoundary>
   );
 };
 

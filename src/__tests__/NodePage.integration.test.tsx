@@ -58,7 +58,7 @@ jest.mock('../features/progress/progressSlice', () => {
 });
 
 // 🔧 Firestore Mocks
-jest.mock('firebase/firestore/lite', () => ({
+jest.mock('firebase/firestore', () => ({
   doc: jest.fn(() => ({})),
   getDoc: jest.fn(() => ({
     exists: () => true,
@@ -78,6 +78,18 @@ jest.mock('firebase/firestore/lite', () => ({
     ],
   })),
 }));
+
+// 🔧 Full mock of firebaseConfig to avoid getFirestore crashes
+jest.mock('../firebaseConfig', () => ({
+  __esModule: true,
+  db: {}, // mock Firestore instance
+  auth: {
+    currentUser: null,
+    onAuthStateChanged: jest.fn(),
+  },
+  analytics: undefined,
+}));
+
 
 describe('NodePage integration', () => {
   it('renders node, toggles subskill, and updates progress UI', async () => {

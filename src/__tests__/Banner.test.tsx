@@ -9,7 +9,7 @@ jest.mock('../firebaseConfig', () => ({
   db: {},
 }));
 
-jest.mock('firebase/firestore/lite', () => ({
+jest.mock('firebase/firestore', () => ({
   collection: jest.fn(),
   getDocs: jest.fn(() =>
     Promise.resolve({
